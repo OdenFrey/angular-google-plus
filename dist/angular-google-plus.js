@@ -95,11 +95,15 @@ angular.module("googleplus", []).provider("GooglePlus", [ function() {
             return e.promise;
         };
         f.prototype.checkAuth = function() {
+            e = b.defer();
+
             gapi.auth.authorize({
                 client_id: a.clientId,
                 scope: a.scopes,
                 immediate: true
             }, this.handleAuthResult);
+
+            return e.promise;
         };
         f.prototype.handleClientLoad = function() {
             gapi.client.setApiKey(a.apiKey);
@@ -111,7 +115,7 @@ angular.module("googleplus", []).provider("GooglePlus", [ function() {
                 e.resolve(a);
                 c.$apply();
             } else {
-                e.reject("error");
+                e.reject(a);
             }
         };
         f.prototype.getUser = function() {
