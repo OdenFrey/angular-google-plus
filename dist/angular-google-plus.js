@@ -80,6 +80,9 @@ angular.module("googleplus", []).provider("GooglePlus", [ function() {
        * @type {Class}
        */
         var f = function() {};
+        f.prototype.getClientId  = function() {
+            return a.clientId;
+        };
         f.prototype.login = function() {
             e = b.defer();
             var c = {
@@ -143,7 +146,7 @@ angular.module("googleplus", []).provider("GooglePlus", [ function() {
     var a = document.createElement("script");
     a.type = "text/javascript";
     a.async = true;
-    a.src = "https://apis.google.com/js/client.js";
+    a.src = "https://apis.google.com/js/client:platform.js";
     var b = document.getElementsByTagName("script")[0];
     b.parentNode.insertBefore(a, b);
 } ]);
