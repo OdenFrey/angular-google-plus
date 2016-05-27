@@ -1,14 +1,35 @@
+(function(window, angular, undefined) {
+  'use strict';
+
+    // Module global options.
+  var a = {};
+
+  // Module global flags.
+  var fl = {
+    sdk: false,
+    ready: false
+  };
+  
+
 /*! angular-google-plus - v0.1.3 2015-08-27 */
 /**
  * googleplus module
  */
-angular.module("googleplus", []).provider("GooglePlus", [ function() {
+angular.module("googleplus", []).
+
+    // Declare module options value
+    value('a', a).
+
+    // Declare module flags value
+    value('fl', fl).
+
+    provider("GooglePlus", [ function() {
     /**
      * Options object available for module
      * options/services definition.
      * @type {Object}
      */
-    var a = {};
+    //var a = {};
     /**
      * clientId
      * @type {Number}
@@ -80,6 +101,12 @@ angular.module("googleplus", []).provider("GooglePlus", [ function() {
        * @type {Class}
        */
         var f = function() {};
+        f.prototype.getClientId  = function() {
+            return a.clientId;
+        };
+        f.prototype.isReady = function() {
+          return fl.ready;
+        };
         f.prototype.login = function() {
             e = b.defer();
             var c = {
@@ -199,7 +226,17 @@ angular.module("googleplus", []).provider("GooglePlus", [ function() {
     var a = document.createElement("script");
     a.type = "text/javascript";
     a.async = true;
-    a.src = "https://apis.google.com/js/client.js";
+    a.src = "https://apis.google.com/js/client:platform.js";
     var b = document.getElementsByTagName("script")[0];
     b.parentNode.insertBefore(a, b);
+
+    a.onload = function() {
+        // Set sdk global flag
+        fl.sdk = true; 
+
+        // Set ready global flag
+        fl.ready = true;
+      };
 } ]);
+
+})(window, angular);
