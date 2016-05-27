@@ -128,6 +128,62 @@ angular.module("googleplus", []).provider("GooglePlus", [ function() {
             });
             return a.promise;
         };
+        f.prototype.getEvents = function (uuid) {
+            var a = b.defer();
+            gapi.client.load("calendar", "v3", function () {
+                gapi.client.calendar.events.list({
+                    "calendarId": "primary",
+                    "showDeleted": false,
+                    "privateExtendedProperty": "uuid=" + uuid
+                }).execute(function (b) {
+                    a.resolve(b);
+                    c.$apply();
+                });
+            });
+
+            return a.promise;
+        };
+
+        f.prototype.addEvent = function (event) {
+            var a = b.defer();
+
+            this.getEvents(event.extendedProperties.private.uuid).then(function(events) {
+                if (!events || !events.items.length){
+                    gapi.client.load("calendar", "v3", function () {
+                        gapi.client.calendar.events.insert({
+                            "calendarId": "primary",
+                            "resource": event
+                        }).execute(function (b) {
+                            a.resolve(b);
+                            c.$apply();
+                        });
+                    });
+                } else {
+                    a.reject(events.items[0]);
+                }
+            });
+
+            return a.promise;
+        };
+
+        f.prototype.deleteEvent = function (eventId) {
+            var a = b.defer();
+            this.getEvents(eventId).then(function(events) {
+                if (events && events.items.length){
+                    gapi.client.load("calendar", "v3", function () {
+                        gapi.client.calendar.events.delete({
+                            "calendarId": "primary",
+                            "eventId": events.items[0].id
+                        }).execute(function (b) {
+                            a.resolve(b);
+                            c.$apply();
+                        });
+                    });
+                }
+            });
+
+            return a.promise;
+        };
         f.prototype.getToken = function() {
             return gapi.auth.getToken();
         };
